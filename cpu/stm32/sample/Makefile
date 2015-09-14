@@ -1,6 +1,6 @@
 # Generic Makefile for C/C++ Program
 #
-# Author:  
+# Author:
 # Description:
 # ------------
 # This is an easily customizable makefile template. The purpose is to

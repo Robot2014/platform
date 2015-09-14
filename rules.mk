@@ -22,7 +22,7 @@
 # Top directory  Makefile
 
 #MACRO_DEFINE += -DEBUGALL
-CFLAGS +=$(COMPAILFLAGS) -g -O0 -Wall -Werror $(MACRO_DEFINE) 
+CFLAGS +=$(COMPAILFLAGS) -g -O0 -Wall -Werror $(MACRO_DEFINE)
 # AR = ar
 ARFLAGS = crv
 
@@ -45,7 +45,7 @@ INCS := $(strip $(INCS))
 INCS := $(addprefix -I,$(INCS))
 endif
 
-# when build execute file 
+# when build execute file
 ifneq ($(EXES),)
 EXES := $(addprefix $(EXESDIR)/,$(EXES))
 RMS += $(EXES)
@@ -53,7 +53,7 @@ LIBSDIR := $(strip $(LIBSDIR))
 LIBSDIR := $(addprefix -L,$(LIBSDIR))
 endif
 
-# when build static libaray file 
+# when build static libaray file
 ifneq ($(LIBS),"")
 LIBS := $(addprefix $(LIBSDIR)/,$(LIBS))
 RMS += $(LIBS)
@@ -81,7 +81,7 @@ all : $(EXES)
 endif
 
 ifneq ($(LIBS),"")
-all : $(LIBS)
+all : $(DEPS_DIR) $(LIBS)
 endif
 
 ifneq ($(LINK_LIBS),"")
@@ -139,8 +139,9 @@ $(DEPS_DIR)/%.dep : $(SRCSDIR)/%.c $(DEPS_DIR)
 	@echo "creating depend file ..." $@
 	@set -e;\
 	$(CC) $(INCS) $(CFLAGS) -MM $< > $@.tmp;\
-	sed 's,\($*\)\.o[ :]*,$(OBJS)/\1.o $@ : ,g' < $@.tmp > $@ \
-	rm -f $@.tmp;
+	sed 's,\($*\)\.o[ :]*,$(OBJSDIR)/\1.o $@ : ,g' < $@.tmp > $@;\
+	rm -f $@.tmp;\
+	exit 1
 
 clean:
 	rm -rf $(RMS)
@@ -152,11 +153,7 @@ show:
 	@echo $(DEPS)
 	@echo $(LIBS)
 	@echo $(DIR_LIBS)
-	@echo $(DIR_DEPS)
+	@echo $(DEPS_DIR)
 	@echo $(TOPDIR)
-	@echo $(LINK_LIBS)
-	@echo $(DIR_LIBS)
-	@echo $(DIR_INCS)
-	@echo $(DIR_EXES)
 	@echo $(MACRO_DEFINE)
 	@echo $(CFLAGS)
